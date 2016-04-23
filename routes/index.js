@@ -35,11 +35,13 @@ router.get(baseUrl + "/word", function(req,res){
         });
 });
 
-
+/*
+    Dictionary table
+*/
 //query for post word
 router.post(baseUrl + "/word", function(req,res){
         var result = [];
-        var sql = "insert into dictionary(fin,en,img_url) values($1,$2,$3)";
+        var sql = "insert into dictionary(fin,en,img_url) values($1,$2,$3g)";
         
         var data = { fin: req.body.fin, en: req.body.en, url: req.body.url};
 
@@ -53,6 +55,37 @@ router.post(baseUrl + "/word", function(req,res){
                 }
              
                 var query = client.query(sql,[data.fin,data.en,data.url]);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
+/*
+    Scale table
+*/
+
+router.post(baseUrl + "/scale", function(req,res){
+        var result = [];
+        var sql = "insert into scale(date,timestamp,value) values($1,$2,$3g)";
+        
+        var data = { date: req.body.date, timestamp: req.body.timestamp, val: req.body.val};
+
+       
+        
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql,[data.date,data.timestamp,data.val);
                 query.on('row',function(row){
                         result.push(row);   
                 });
