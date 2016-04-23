@@ -85,7 +85,7 @@ router.post(baseUrl + "/scale", function(req,res){
                         return res.status(500).json({success: false, data: err});
                 }
              
-                var query = client.query(sql,[data.date,data.timestamp,data.val);
+                var query = client.query(sql,[data.date,data.timestamp,data.val]);
                 query.on('row',function(row){
                         result.push(row);   
                 });
