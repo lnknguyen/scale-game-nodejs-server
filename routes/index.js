@@ -74,7 +74,7 @@ router.post(baseUrl + "/word", function(req,res){
 
 router.post(baseUrl + "/scale", function(req,res){
         var result = [];
-        var sql = "insert into scale(date,timestamp,value) values($1,$2,$3g)";
+        var sql = "insert into scale(date,timestamp,value) values($1,$2,$3)";
         
         var data = { date: req.body.date, timestamp: req.body.timestamp, val: req.body.val};
 
