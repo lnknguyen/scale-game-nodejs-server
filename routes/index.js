@@ -7,6 +7,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/*
+    Dictionary table
+*/
+
 //query word
 router.get(baseUrl + "/word", function(req,res){
         var result = [];
@@ -35,13 +39,11 @@ router.get(baseUrl + "/word", function(req,res){
         });
 });
 
-/*
-    Dictionary table
-*/
+
 //query for post word
 router.post(baseUrl + "/word", function(req,res){
         var result = [];
-        var sql = "insert into dictionary(fin,en,img_url) values($1,$2,$3g)";
+        var sql = "insert into dictionary(fin,en,img_url) values($1,$2,$3)";
         
         var data = { fin: req.body.fin, en: req.body.en, url: req.body.url};
 
