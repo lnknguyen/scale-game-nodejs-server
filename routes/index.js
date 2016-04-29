@@ -69,11 +69,11 @@ router.post(baseUrl + "/word", function(req,res){
 });
 
 //update url
-router.put(baseUrl + "/word/:dict_id", function(req,res){
+router.put(baseUrl + "/word/:id", function(req,res){
         var result = [];
 
         //grab id
-        var id = reg.params.dict_id;
+        var id = reg.params.id;
 
         //data from body
         var data = { url: req.body.url};
