@@ -104,6 +104,35 @@ router.put(baseUrl + "/word/:dict_id", function(req,res){
     Scale table
 */
 
+router.get(baseUrl + "/scale", function(req,res){
+        var result = [];
+        
+        var sql = "select * from scale"
+        
+
+       
+        
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
+
+
 router.post(baseUrl + "/scale", function(req,res){
         var result = [];
         var sql = "insert into scale(date,timestamp,value) values($1,$2,$3)";
