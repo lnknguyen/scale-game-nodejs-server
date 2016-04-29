@@ -109,8 +109,6 @@ router.get(baseUrl + "/scale", function(req,res){
         
         var sql = "select * from scale"
         
-
-       
         
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -135,9 +133,11 @@ router.get(baseUrl + "/scale", function(req,res){
 
 router.post(baseUrl + "/scale", function(req,res){
         var result = [];
-        var sql = "insert into scale(date,timestamp,value) values($1,$2,$3)";
+        var sql = "insert into scale(date,timestamp,value,username,goal_weight,goal_height,goal_day) values($1,$2,$3,$4,$5,$6,$7)";
         
-        var data = { date: req.body.date, timestamp: req.body.timestamp, val: req.body.val};
+        var data = { date: req.body.date, timestamp: req.body.timestamp
+            , val: req.body.val,username: req.body.username,goalweight: req.body.goalweight
+            , height: req.body.goalheight,day: req.body.goalday};
 
        
         
@@ -148,7 +148,9 @@ router.post(baseUrl + "/scale", function(req,res){
                         return res.status(500).json({success: false, data: err});
                 }
              
-                var query = client.query(sql,[data.date,data.timestamp,data.val]);
+                var query = client.query(sql,
+                    [data.date,data.timestamp,data.val,data.username,data.goalweight,
+                    data.height,data.day]);
                 query.on('row',function(row){
                         result.push(row);   
                 });
