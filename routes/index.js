@@ -68,6 +68,38 @@ router.post(baseUrl + "/word", function(req,res){
         });
 });
 
+//update url
+router.put(baseUrl + "/word/:dict_id", function(req,res){
+        var result = [];
+
+        //grab id
+        var id = reg.params.dict_id;
+
+        //data from body
+        var data = { url: req.body.url};
+
+        var sql = "update dicionary set img_url=($1) where id=($2)";
+       
+        
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql,[data.url,id]);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
 /*
     Scale table
 */
