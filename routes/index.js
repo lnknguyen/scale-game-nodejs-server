@@ -78,7 +78,7 @@ router.put(baseUrl + "/word/:dict_id", function(req,res){
         //data from body
         var data = { url: req.body.url};
 
-        var sql = "update dicionary set img_url=($1) where id=($2)";
+        var sql = "update dictionary set img_url=($1) where id=($2)";
        
         
         pg.connect(hardString,function(err,client,done){
@@ -144,7 +144,7 @@ router.post(baseUrl + "/scale", function(req,res){
             ,day: req.body.day};
 
        
-        
+        curl --data "date=22/4/2016&timestamp=22&value=0.324&username=Danh&goalweight=50&height=1.7&day=30" https://mysterious-inlet-23105.herokuapp.com/api/v1/scale
         pg.connect(hardString,function(err,client,done){
                 if(err){
                         done();
@@ -172,3 +172,5 @@ router.post(baseUrl + "/scale", function(req,res){
 });
 
 module.exports = router;
+
+
