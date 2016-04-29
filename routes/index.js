@@ -135,9 +135,13 @@ router.post(baseUrl + "/scale", function(req,res){
         var result = [];
         var sql = "insert into scale(date,timestamp,value,username,goal_weight,goal_height,goal_day) values($1,$2,$3,$4,$5,$6,$7)";
         
-        var data = { date: req.body.date, timestamp: req.body.timestamp
-            , val: req.body.val,username: req.body.username,goalweight: req.body.goalweight
-            , height: req.body.goalheight,day: req.body.goalday};
+        var data = { date: req.body.date, 
+            timestamp: req.body.timestamp
+            , val: req.body.val
+            , username: req.body.username
+            ,goalweight: req.body.goalweight
+            , height: req.body.goalheight
+            ,day: req.body.goalday};
 
        
         
