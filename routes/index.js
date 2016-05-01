@@ -226,6 +226,35 @@ router.get(baseUrl + "/user", function(req,res){
         });
 });
 
+//GET
+//User by name
+//Param: Username
+//Return: user data by Username
+router.get(baseUrl + "/user/:username", function(req,res){
+        var result = [];
+
+        var username = req.params.username;
+        var sql = "select * from user_data where name=($1)";
+            
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql,[username]);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
 //POST
 //Upload user profile
 //Params: name, height, goal_day, goal_weight
