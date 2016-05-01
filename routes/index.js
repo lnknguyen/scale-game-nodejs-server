@@ -132,6 +132,37 @@ router.get(baseUrl + "/scale", function(req,res){
         });
 });
 
+//GET
+//Get scale data from user id
+//Params: user_id
+//Return: list of scale data sorted by user id
+router.get(baseUrl + "/scale/:user_id", function(req,res){
+        var result = [];
+        
+        //grab user id
+        var id = req.params.user_id;
+        var sql = "select * from scale_data where user_id=($1)"
+        
+        
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql,[id]);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
 //POST
 //Upload scale value based on user id 
 //Params: user_id, time, value
