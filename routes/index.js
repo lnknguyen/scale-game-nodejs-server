@@ -104,7 +104,7 @@ router.put(baseUrl + "/word/:id", function(req,res){
     Scale table
 */
 
-router.get(baseUrl + "/scale", function(req,res){
+router.get(baseUrl + "/scale_table", function(req,res){
         var result = [];
         
         var sql = "select * from scale"
