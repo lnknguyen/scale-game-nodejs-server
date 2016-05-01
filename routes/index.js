@@ -104,10 +104,13 @@ router.put(baseUrl + "/word/:id", function(req,res){
     Scale table
 */
 
-router.get(baseUrl + "/scale_table", function(req,res){
+
+//GET
+//Fetch all data from scale table
+router.get(baseUrl + "/scale", function(req,res){
         var result = [];
         
-        var sql = "select * from scale"
+        var sql = "select * from scale_data"
         
         
         pg.connect(hardString,function(err,client,done){
@@ -129,19 +132,17 @@ router.get(baseUrl + "/scale_table", function(req,res){
         });
 });
 
-
-//post method for scale table
+//POST
+//Upload scale value based on user id 
+//Params: user_id, time, value
+//Return: nothing
 router.post(baseUrl + "/scale", function(req,res){
         var result = [];
-        var sql = "insert into scale(date,timestamp,value,username,goal_weight,goal_height,goal_day) values($1,$2,$3,$4,$5,$6,$7)";
+        var sql = "insert into scale_data (user_id,time_stamp,value) values($1,$2,$3)";
         
-        var data = { date: req.body.date, 
-            timestamp: req.body.timestamp
-            , value: req.body.value
-            , username: req.body.username
-            ,goalweight: req.body.goalweight
-            , height: req.body.height
-            ,day: req.body.day};
+        var data = { user_id: req.body.user_id, 
+            time_stamp: req.body.time_stamp
+            , value: req.body.value};
 
        
         
@@ -153,13 +154,10 @@ router.post(baseUrl + "/scale", function(req,res){
                 }
              
                 var query = client.query(sql,
-                    [data.date
-                    ,data.timestamp
-                    ,data.value
-                    ,data.username
-                    ,data.goalweight,
-                    data.height
-                    ,data.day]);
+                    [data.user_id
+                    ,data.time_stamp
+                    ,data.value]);
+
                 query.on('row',function(row){
                         result.push(row);   
                 });
@@ -171,6 +169,108 @@ router.post(baseUrl + "/scale", function(req,res){
         });
 });
 
+//GET
+//All users
+//Return: all users
+router.get(baseUrl + "/user", function(req,res){
+        var result = [];
+        var sql = "select * from user_data";
+            
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
+//POST
+//Upload user profile
+//Params: name, height, goal_day, goal_weight
+router.post(baseUrl + "/user", function(req,res){
+        var result = [];
+        var sql = "insert into user_data(name,height,goal_day,goal_weight) values ($1,$2,$3,$4)";
+            
+        var data = { name: req.body.name, 
+                height: req.body.height
+                , goal_day: req.body.goal_day
+                , weight: req.body.weight};
+
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                 client.query(sql,
+                    [data.name
+                    ,data.height
+                    ,data.goal_day
+                    ,data.weight]);
+                
+                var query = client.query("select * from user_data");
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+
+                
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
+//PUT
+//Update user's height, goal_day, goal_weight
+//Params: username, height, goal day, goal weight
+router.put(baseUrl + "/user/:username", function(req,res){
+        var result = [];
+
+        //grab id
+        var username = req.params.username;
+        var sql = "update user_data set height=($1), goal_day=($2), goal_weight=($3) where name=($4)";
+            
+        var data = {  height: req.body.height
+                , goal_day: req.body.goal_day
+                , weight: req.body.weight};
+
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                client.query(sql,
+                    [data.height
+                    ,data.goal_day
+                    ,data.weight,username]);
+
+                var query = client.query("select * from user_data");
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
 module.exports = router;
 
 
