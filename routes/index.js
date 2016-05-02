@@ -293,14 +293,15 @@ router.get(baseUrl + "/user/login", function(req,res){
 //Params: name, height, goal_day, goal_weight
 router.post(baseUrl + "/user", function(req,res){
         var result = [];
-        var sql = "insert into user_data(username,height,goal_day,goal_weight,register_day,password) values ($1,$2,$3,$4,$5,$6)";
+        var sql = "insert into user_data(username,height,goal_day,goal_weight,register_day,password,status) values ($1,$2,$3,$4,$5,$6,$7)";
             
         var data = { name: req.body.name, 
                 height: req.body.height
                 , goal_day: req.body.goal_day
                 , weight: req.body.weight
                 , register_day: req.body.register_day
-                , password: req.body.password};
+                , password: req.body.password
+                , status: req.body.status};
 
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -315,7 +316,8 @@ router.post(baseUrl + "/user", function(req,res){
                     ,data.goal_day
                     ,data.weight
                     ,data.register_day
-                    ,data.password]);
+                    ,data.password
+                    ,data.status]);
                 
                 var query = client.query("select * from user_data");
                 query.on('row',function(row){
