@@ -189,7 +189,7 @@ router.post(baseUrl + "/scale", function(req,res){
                     ,data.time_stamp
                     ,data.value],function(err,result){
                         if (err){
-                            var body = 'Error uploading data';
+                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
                                 {'Content-Length': body.length,
