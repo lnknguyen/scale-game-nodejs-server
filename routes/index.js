@@ -280,7 +280,7 @@ router.get(baseUrl + "/user/login", function(req,res){
 
         var data = { username: req.body.username 
             , password: req.body.password};
-        var sql = "select username,height,goal_day,goal_weight,register_day,status from user_data where username=($1), password=($2)";
+        var sql = "select id,username,height,goal_day,goal_weight,register_day,status from user_data where username=($1), password=($2)";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
