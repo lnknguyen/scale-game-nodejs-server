@@ -248,6 +248,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
                 }
              
                 var query = client.query(sql,[username]);
+
                 query.on('row',function(row){
                         result.push(row);   
                 });
@@ -275,8 +276,9 @@ router.get(baseUrl + "/user/login", function(req,res){
                         console.log(error);
                         return res.status(500).json({success: false, data: err});
                 }
-             
+             /*
                 var query = client.query(sql,[username]);
+
                 query.on('row',function(row){
                         result.push(row);   
                 });
@@ -284,7 +286,16 @@ router.get(baseUrl + "/user/login", function(req,res){
                 query.on('end',function(){
                         done();
                         return res.json(result);
-                });
+                });*/
+
+        clien.query(sql,[username],function(err,result){
+                if(err){
+                    return result.status();
+                }
+                console.log("succes");
+                done();
+                return res.status();
+        });
         });
 });
 
@@ -317,20 +328,42 @@ router.post(baseUrl + "/user", function(req,res){
                     ,data.weight
                     ,data.register_day
                     ,data.password
-                    ,data.status]);
+                    ,data.status],function(err,result){
+                        if (err){
+                            var message = 'Error running query ' + err;
+                            res.writeHead(500,{'content-type':'application/json'});
+                            res.end(message);
+                            //console.error(message);
+                            done();
+                            client.end();
+                            console.error(res.statusCode);
+                            return res.statusCode;
+                        }
+                        else{
+                            var message = 'Successful';
+                            res.writeHead(200,{'content-type':'application/json'});
+                            res.end(message);
+                            console.log(message);
+                            done();
+                            client.end();
+                            return res.statusCode;
+                        }
+                        
+                    });
                 
+/*
                 var query = client.query("select * from user_data");
                 query.on('row',function(row){
                         result.push(row);   
                 });
 
-
                 
                 query.on('end',function(){
                         done();
                         return res.json(result);
-                });
+                });*/
         });
+        
 });
 
 //PUT
