@@ -314,7 +314,8 @@ router.post(baseUrl + "/user", function(req,res){
                     ,data.height
                     ,data.goal_day
                     ,data.weight
-                    ,data.register_day]);
+                    ,data.register_day
+                    ,data.password]);
                 
                 var query = client.query("select * from user_data");
                 query.on('row',function(row){
