@@ -272,7 +272,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
         });
 });
 
-//GET
+//POST
 //QUery user by username and password
 //Return: user with username and password, error if nothing found
 router.post(baseUrl + "/user/login", function(req,res){
@@ -280,7 +280,7 @@ router.post(baseUrl + "/user/login", function(req,res){
 
         var data = { username: req.body.username 
             , password: req.body.password};
-        var sql = "select id,username,height,goal_day,goal_weight,register_day,status from user_data where username=($1), password=($2)";
+        var sql = "select id,username,height,goal_day,goal_weight,register_day,status from user_data where username=($1) and password=($2)";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
