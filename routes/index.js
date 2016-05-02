@@ -248,6 +248,8 @@ router.get(baseUrl + "/user/:username", function(req,res){
         var result = [];
 
         var username = req.params.username;
+        var data = { name: req.body.name}; 
+            
         var sql = "select username,height,goal_day,goal_weight,register_day,status from user_data where username=($1)";
             
         pg.connect(hardString,function(err,client,done){
@@ -257,7 +259,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
                         return res.status(500).json({success: false, data: err});
                 }
              
-                var query = client.query(sql,[username]);
+                var query = client.query(sql,[data.name]);
 
                 query.on('row',function(row){
                         result.push(row);   
