@@ -209,7 +209,7 @@ router.post(baseUrl + "/scale", function(req,res){
 //Return: all users
 router.get(baseUrl + "/user", function(req,res){
         var result = [];
-        var sql = "select(username,height,goal_day,goal_weight,register_day,status) from user_data";
+        var sql = "select username,height,goal_day,goal_weight,register_day,status from user_data";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -238,7 +238,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
         var result = [];
 
         var username = req.params.username;
-        var sql = "select (username,height,goal_day,goal_weight,register_day,status) from user_data where username=($1)";
+        var sql = "select username,height,goal_day,goal_weight,register_day,status from user_data where username=($1)";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -313,7 +313,8 @@ router.post(baseUrl + "/user", function(req,res){
                     [data.name
                     ,data.height
                     ,data.goal_day
-                    ,data.weight]);
+                    ,data.weight
+                    ,data.register_day]);
                 
                 var query = client.query("select * from user_data");
                 query.on('row',function(row){
