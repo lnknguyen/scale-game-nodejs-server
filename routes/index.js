@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var baseUrl = "/api/v1";
 var pg = require('pg');
-var hardString = process.env.DATABASE_URL || "postgres://localhost:5432/android-dictionary";
+var hardString = process.env.DATABASE_URL || "postgres://localhost:5432/test-db";
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
@@ -200,12 +200,16 @@ router.post(baseUrl + "/scale", function(req,res){
         });
 });
 
+/*
+    Query for user table
+*/
+
 //GET
 //All users
 //Return: all users
 router.get(baseUrl + "/user", function(req,res){
         var result = [];
-        var sql = "select * from user_data";
+        var sql = "select(username,height,goal_day,goal_weight,register_day,status) from user_data";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -234,7 +238,36 @@ router.get(baseUrl + "/user/:username", function(req,res){
         var result = [];
 
         var username = req.params.username;
-        var sql = "select * from user_data where name=($1)";
+        var sql = "select (username,height,goal_day,goal_weight,register_day,status) from user_data where username=($1)";
+            
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql,[username]);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
+//GET
+//QUery user by username and password
+//Return: user with username and password, error if nothing found
+router.get(baseUrl + "/user/login", function(req,res){
+        var result = [];
+
+        var data = { username: req.body.username 
+            , password: req.body.password};
+        var sql = "select (username,height,goal_day,goal_weight,register_day,status) from user_data where username=($1), password=($2)";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -260,12 +293,14 @@ router.get(baseUrl + "/user/:username", function(req,res){
 //Params: name, height, goal_day, goal_weight
 router.post(baseUrl + "/user", function(req,res){
         var result = [];
-        var sql = "insert into user_data(name,height,goal_day,goal_weight) values ($1,$2,$3,$4)";
+        var sql = "insert into user_data(username,height,goal_day,goal_weight,register_day,password) values ($1,$2,$3,$4,$5,$6)";
             
         var data = { name: req.body.name, 
                 height: req.body.height
                 , goal_day: req.body.goal_day
-                , weight: req.body.weight};
+                , weight: req.body.weight
+                , register_day: req.body.register_day
+                , password: req.body.password};
 
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -302,7 +337,7 @@ router.put(baseUrl + "/user/:username", function(req,res){
 
         //grab id
         var username = req.params.username;
-        var sql = "update user_data set height=($1), goal_day=($2), goal_weight=($3) where name=($4)";
+        var sql = "update user_data set height=($1), goal_day=($2), goal_weight=($3) where username=($4)";
             
         var data = {  height: req.body.height
                 , goal_day: req.body.goal_day
