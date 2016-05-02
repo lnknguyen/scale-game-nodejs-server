@@ -290,7 +290,8 @@ router.post(baseUrl + "/user/login", function(req,res){
                 }
              
                 client.query(sql,[data.username,data.password],function(err,result){
-                        if (err){
+                        
+                        if (err || result.rows.length==0){
                             var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
