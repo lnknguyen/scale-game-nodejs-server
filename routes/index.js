@@ -136,12 +136,13 @@ router.get(baseUrl + "/scale", function(req,res){
 //Get scale data from user id
 //Params: user_id
 //Return: list of scale data sorted by user id
-router.get(baseUrl + "/scale/:user_id", function(req,res){
+router.get(baseUrl + "/scale/:username", function(req,res){
         var result = [];
         
         //grab user id
-        var id = req.params.user_id;
-        var sql = "select * from scale_data where user_id=($1)"
+        var username = req.params.username;
+        var sql = "select * from scale_data where" 
+        + "user_id=(select id from user_data where username=($1))"
         
         
         pg.connect(hardString,function(err,client,done){
@@ -151,7 +152,7 @@ router.get(baseUrl + "/scale/:user_id", function(req,res){
                         return res.status(500).json({success: false, data: err});
                 }
              
-                var query = client.query(sql,[id]);
+                var query = client.query(sql,[username]);
                 query.on('row',function(row){
                         result.push(row);   
                 });
@@ -169,9 +170,10 @@ router.get(baseUrl + "/scale/:user_id", function(req,res){
 //Return: nothing
 router.post(baseUrl + "/scale", function(req,res){
         var result = [];
-        var sql = "insert into scale_data (user_id,time_stamp,value) values($1,$2,$3)";
+        var sql = "insert into scale_data (user_id,time_stamp,value)" 
+        + " values((select id from user_data where username=($1)),$2,$3)";
         
-        var data = { user_id: req.body.user_id, 
+        var data = { username: req.body.username, 
             time_stamp: req.body.time_stamp
             , value: req.body.value};
 
@@ -185,7 +187,7 @@ router.post(baseUrl + "/scale", function(req,res){
                 }
              
             client.query(sql,
-                    [data.user_id
+                    [data.username
                     ,data.time_stamp
                     ,data.value],function(err,result){
                         if (err){
