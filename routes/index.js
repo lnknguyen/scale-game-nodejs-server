@@ -141,8 +141,7 @@ router.get(baseUrl + "/scale/:username", function(req,res){
         
         //grab user id
         var username = req.params.username;
-        var sql = "select * from scale_data where" 
-        + "user_id=(select id from user_data where username=($1))"
+        var sql = "select * from scale_data where user_id=(select id from user_data where username=($1))"
         
         
         pg.connect(hardString,function(err,client,done){
