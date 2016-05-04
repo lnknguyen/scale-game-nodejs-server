@@ -397,7 +397,7 @@ router.put(baseUrl + "/user/:username", function(req,res){
                     ,data.goal_day
                     ,data.weight,username],function(err,result){
                         if (err){
-                            var body = 'Error updating user';
+                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
                                 {'Content-Length': body.length,
