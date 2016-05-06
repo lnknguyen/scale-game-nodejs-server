@@ -251,7 +251,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
         var username = req.params.username;
          
             
-        var sql = "select username,height,goal_day,goal_weight,register_day,status from user_data where username=($1)";
+        var sql = "select id, username,height,goal_day,goal_weight,register_day,status from user_data where username=($1)";
             
         pg.connect(hardString,function(err,client,done){
                 if(err){
