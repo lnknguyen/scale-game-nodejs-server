@@ -280,7 +280,18 @@ router.get(baseUrl + "/user/:username", function(req,res){
                         return res.status(500).json({success: false, data: err});
                 }
              
-                var query = client.query(sql,[username]);
+                var query = client.query(sql,[username],
+                    function(err,result){
+                        if (err){
+                            var body = 'Error';
+                            var message = 'Error';
+                            res.writeHead(500,
+                                {'Content-Length': body.length,
+                                'Content-Type': 'text/html' });
+                            res.end(message);     
+                        }
+                        
+                    });
 
                 query.on('row',function(row){
                         result.push(row);   
