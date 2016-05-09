@@ -153,11 +153,9 @@ router.get(baseUrl + "/scale/:username", function(req,res){
              
                 var query = client.query(sql,[username],function(err,request,result,data){
                         if (err){
-                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                { 'Content-Type': 'text/html' });
                             res.end(message);     
                         }
                         
@@ -200,19 +198,16 @@ router.post(baseUrl + "/scale", function(req,res){
                     ,data.time_stamp
                     ,data.value],function(err,result){
                         if (err){
-                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                {'Content-Type': 'text/html' });
                             res.end(message);     
                         }
                         else{
-                            var body = 'Successful';
+
                             var message = 'Successful';
                             res.writeHead(200,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                {'Content-Type': 'text/html' });
                             res.end(message);   
                         }
                     });
@@ -235,17 +230,15 @@ router.get(baseUrl + "/user", function(req,res){
         pg.connect(hardString,function(err,client,done){
                 if(err){
                         done();
-                        console.log(error);
+                        console.log(err);
                         return res.status(500).json({success: false, data: err});
                 }
              
                 var query = client.query(sql,function(err,result){
                         if (err){
-                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                {'Content-Type': 'text/html' });
                             res.end(message);     
                         }
                         
@@ -283,11 +276,9 @@ router.get(baseUrl + "/user/:username", function(req,res){
                 var query = client.query(sql,[username],
                     function(err,result){
                         if (err){
-                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                {'Content-Type': 'text/html' });
                             res.end(message);     
                         }
                         
@@ -376,19 +367,15 @@ router.post(baseUrl + "/user", function(req,res){
                     ,data.password
                     ,data.status],function(err,request,result,data){
                         if (err){
-                            var body = 'Error';
                             var message = 'Error';
                             res.writeHead(500,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                {'Content-Type': 'text/html' });
                             res.end(message);     
                         }
                         else{
-                            var body = 'Successful';
                             var message = 'Successful';
                             res.writeHead(200,
-                                {'Content-Length': body.length,
-                                'Content-Type': 'text/html' });
+                                {'Content-Type': 'text/html' });
                             res.end(message);   
                         }
                         
