@@ -222,6 +222,50 @@ router.post(baseUrl + "/scale", function(req,res){
         });
 });
 
+//DELETE
+//Delete scale data by scale id
+//Params: scale id
+//Return: nothing
+router.delete(baseUrl + "/scale", function(req,res){
+        var sql = "delete from scale_data where id = ($1)";
+        
+        var data = { id: req.body.id};
+
+       
+        
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+        var query = client.query(sql,
+                    [data.id],function(err,result){
+                        if (err){
+                            var message = 'Error';
+                            res.writeHead(500,
+                                {'Content-Type': 'text/html' });
+                            res.end(message);     
+                        }
+                        else{
+
+                            var message = 'Successful';
+                            res.writeHead(200,
+                                {'Content-Type': 'text/html' });
+                            res.end(message);   
+                        }
+                    });
+
+                query.on('end',function(){
+                        done();
+                });
+        });
+});
+
+
+
+
 /*
     Query for user table
 */
@@ -285,7 +329,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
                             var message = 'Error';
                             res.writeHead(500,
                                 {'Content-Type': 'text/html' });
-                            res.connection.setTimeout(0); 
+                            
                             res.end(message);     
                         }
                         
@@ -351,7 +395,7 @@ router.post(baseUrl + "/user/login", function(req,res){
 //Params: name, height, goal_day, goal_weight
 router.post(baseUrl + "/user", function(req,res){
         var result = [];
-        var sql = "insert into user_data(username,height,goal_day,goal_weight,register_day,password,status) values ($1,$2,$3,$4,$5,$6,$7)";
+        var sql = "insert into user_data(username,height,goal_day,goal_weight,register_day,password,status,begin_day) values ($1,$2,$3,$4,$5,$6,$7,$8)";
             
         var data = { name: req.body.name, 
                 height: req.body.height
@@ -359,7 +403,8 @@ router.post(baseUrl + "/user", function(req,res){
                 , weight: req.body.weight
                 , register_day: req.body.register_day
                 , password: req.body.password
-                , status: req.body.status};
+                , status: req.body.status}
+                , begin_day: req.body.begin_day};
 
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -375,7 +420,7 @@ router.post(baseUrl + "/user", function(req,res){
                     ,data.weight
                     ,data.register_day
                     ,data.password
-                    ,data.status],function(err,request,result,data){
+                    ,data.status,data.begin_day],function(err,request,result,data){
                         if (err){
                             var message = 'Error';
                             res.writeHead(500,
@@ -407,11 +452,12 @@ router.put(baseUrl + "/user/:username", function(req,res){
 
         //grab id
         var username = req.params.username;
-        var sql = "update user_data set height=($1), goal_day=($2), goal_weight=($3) where username=($4)";
+        var sql = "update user_data set height=($1), goal_day=($2), goal_weight=($3), begin_day=($4) where username=($5)";
             
         var data = {  height: req.body.height
                 , goal_day: req.body.goal_day
-                , weight: req.body.weight};
+                , weight: req.body.weight
+                , begin_day: req.body.begin_day};
 
         pg.connect(hardString,function(err,client,done){
                 if(err){
@@ -423,7 +469,9 @@ router.put(baseUrl + "/user/:username", function(req,res){
                 client.query(sql,
                     [data.height
                     ,data.goal_day
-                    ,data.weight,username],function(err,result){
+                    ,data.weight
+                    ,data.begin_day
+                    ,username],function(err,result){
                         if (err){
                             var body = 'Error';
                             var message = 'Error';
