@@ -339,7 +339,10 @@ router.post(baseUrl + "/user/login", function(req,res){
                         }
                     });
 
-            
+            client.on('end',function(){
+                        done();
+                
+                });
         });
 });
 
@@ -439,7 +442,10 @@ router.put(baseUrl + "/user/:username", function(req,res){
                             res.end(message);   
                         }
                         });
-
+                client.on('end',function(){
+                        done();
+                
+                });
                 
         });
 });
