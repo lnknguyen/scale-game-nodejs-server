@@ -156,6 +156,7 @@ router.get(baseUrl + "/scale/:username", function(req,res){
                             var message = 'Error';
                             res.writeHead(500,
                                 { 'Content-Type': 'text/html' });
+                            res.connection.setTimeout(0); 
                             res.end(message);     
                         }
                         
@@ -193,7 +194,7 @@ router.post(baseUrl + "/scale", function(req,res){
                         return res.status(500).json({success: false, data: err});
                 }
              
-            client.query(sql,
+        var query = client.query(sql,
                     [data.username
                     ,data.time_stamp
                     ,data.value],function(err,result){
@@ -201,6 +202,7 @@ router.post(baseUrl + "/scale", function(req,res){
                             var message = 'Error';
                             res.writeHead(500,
                                 {'Content-Type': 'text/html' });
+                            res.connection.setTimeout(0); 
                             res.end(message);     
                         }
                         else{
@@ -208,11 +210,15 @@ router.post(baseUrl + "/scale", function(req,res){
                             var message = 'Successful';
                             res.writeHead(200,
                                 {'Content-Type': 'text/html' });
+                            res.connection.setTimeout(0); 
                             res.end(message);   
                         }
                     });
 
-            
+                query.on('end',function(){
+                        done();
+                
+                });
         });
 });
 
@@ -279,6 +285,7 @@ router.get(baseUrl + "/user/:username", function(req,res){
                             var message = 'Error';
                             res.writeHead(500,
                                 {'Content-Type': 'text/html' });
+                            res.connection.setTimeout(0); 
                             res.end(message);     
                         }
                         
