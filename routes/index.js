@@ -403,7 +403,7 @@ router.post(baseUrl + "/user", function(req,res){
                 , weight: req.body.weight
                 , register_day: req.body.register_day
                 , password: req.body.password
-                , status: req.body.status}
+                , status: req.body.status
                 , begin_day: req.body.begin_day};
 
         pg.connect(hardString,function(err,client,done){
